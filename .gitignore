@@ -32,3 +32,5 @@ override.tf.json
 *_override.tf
 *_override.tf.json
 
+# work in progress example
+private-eks-clusters/

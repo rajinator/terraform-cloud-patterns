@@ -1,0 +1,22 @@
+## These are example values, update them to match your environment, and do not commit them to the repository.
+
+locals {
+  applications = {
+    app-a = {
+      namespace       = "default"
+      service_account = "app-a-sa"
+      sqs_queue_arn   = "arn:aws:sqs:us-east-1:123456789012:app-a-queue"
+    },
+    app-b = {
+      namespace       = "default"
+      service_account = "app-b-sa"
+      sqs_queue_arn   = "arn:aws:sqs:us-east-1:123456789012:app-b-queue"
+    },
+    # To add a new app, just add a new block here
+    # app-c = {
+    #   namespace       = "default"
+    #   service_account = "app-c-sa"
+    #   sqs_queue_arn   = "arn:aws:sqs:us-east-1:123456789012:app-c-queue"
+    # }
+  }
+}

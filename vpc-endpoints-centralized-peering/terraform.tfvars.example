@@ -1,0 +1,159 @@
+################################################################################
+# Example Terraform Variables Configuration
+################################################################################
+# Copy this file to terraform.tfvars and update with your actual values
+# cp terraform.tfvars.example terraform.tfvars
+
+################################################################################
+# General Configuration
+################################################################################
+
+region      = "us-east-1"
+environment = "shared-services"
+
+# Default tags applied to all resources
+default_tags = {
+  ManagedBy   = "Terraform"
+  Purpose     = "VPC Endpoints Centralized"
+  CostCenter  = "Infrastructure"
+  Owner       = "DevOps-Team"
+}
+
+################################################################################
+# VPC Configuration
+################################################################################
+
+# The central/network VPC where endpoints will be created
+vpc_id = "vpc-0123456789abcdef0"
+
+# Private subnets where VPC endpoint ENIs will be placed (minimum 2 for HA)
+private_subnet_ids = [
+  "subnet-0123456789abcdef0",
+  "subnet-0123456789abcdef1",
+  "subnet-0123456789abcdef2"
+]
+
+# Route table IDs for gateway endpoints (S3, DynamoDB)
+private_vpc_rtbs = [
+  "rtb-0123456789abcdef0"
+]
+
+# Network ACL ID (optional, for future use)
+private_vpc_nacl_id = "acl-0123456789abcdef0"
+
+################################################################################
+# Multi-Account/VPC Configuration
+################################################################################
+
+# CIDR blocks from spoke VPCs that need access to centralized endpoints
+multi_account_vpc_cidrs = [
+  "10.0.0.0/16",    # Production VPC
+  "10.1.0.0/16",    # Staging VPC
+  "10.2.0.0/16"     # Development VPC
+]
+
+# Map of spoke VPCs for Route53 private hosted zone associations
+# These VPCs will be authorized to associate with the private hosted zones
+vpcs_map = {
+  "production"  = "vpc-prod123456789abcdef0"
+  "staging"     = "vpc-stag123456789abcdef0"
+  "development" = "vpc-dev123456789abcdef0"
+}
+
+################################################################################
+# VPC Endpoints Configuration
+################################################################################
+
+# Define which AWS service endpoints to create
+eps_map = {
+  "ec2" = {
+    name     = "ec2"
+    shortdns = "ec2"
+  }
+  "elb" = {
+    name     = "elasticloadbalancing"
+    shortdns = "elasticloadbalancing"
+  }
+  "logs" = {
+    name     = "logs"
+    shortdns = "logs"
+  }
+  "sts" = {
+    name     = "sts"
+    shortdns = "sts"
+  }
+  "autoscaling" = {
+    name     = "autoscaling"
+    shortdns = "autoscaling"
+  }
+  "ecr-api" = {
+    name     = "ecr.api"
+    shortdns = "api.ecr"
+  }
+  "ecr-dkr" = {
+    name     = "ecr.dkr"
+    shortdns = "dkr.ecr"
+  }
+  "s3" = {
+    name     = "s3"
+    shortdns = "s3"
+  }
+  "elasticache" = {
+    name     = "elasticache"
+    shortdns = "elasticache"
+  }
+  "rds" = {
+    name     = "rds"
+    shortdns = "rds"
+  }
+  "ssm" = {
+    name     = "ssm"
+    shortdns = "ssm"
+  }
+  "secretsmanager" = {
+    name     = "secretsmanager"
+    shortdns = "secretsmanager"
+  }
+  "kms" = {
+    name     = "kms"
+    shortdns = "kms"
+  }
+}
+
+################################################################################
+# Additional Common Endpoints (add to map uncommented as needed)
+################################################################################
+
+# "sns" = {
+#   name     = "sns"
+#   shortdns = "sns"
+# }
+# "sqs" = {
+#   name     = "sqs"
+#   shortdns = "sqs"
+# }
+# "lambda" = {
+#   name     = "lambda"
+#   shortdns = "lambda"
+# }
+# "ecs" = {
+#   name     = "ecs"
+#   shortdns = "ecs"
+# }
+# "ecs-agent" = {
+#   name     = "ecs-agent"
+#   shortdns = "ecs-agent"
+# }
+# "ecs-telemetry" = {
+#   name     = "ecs-telemetry"
+#   shortdns = "ecs-telemetry"
+# }
+# "servicecatalog" = {
+#   name     = "servicecatalog"
+#   shortdns = "servicecatalog"
+# }
+# "appmesh-envoy-management" = {
+#   name     = "appmesh-envoy-management"
+#   shortdns = "appmesh-envoy-management"
+# }
+

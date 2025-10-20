@@ -1,0 +1,130 @@
+################################################################################
+# Core Configuration
+################################################################################
+
+# AWS region where the EKS cluster will be deployed
+region = "us-east-1"
+
+# Optional: Custom cluster name (defaults to "eks-{workspace}" if not set)
+# cluster_name = "my-private-eks"
+
+################################################################################
+# VPC and Networking
+################################################################################
+
+# VPC ID where EKS will be deployed (must exist)
+# Example VPC CIDR: 10.0.0.0/16
+vpc_id = "vpc-0a1b2c3d4e5f6g7h8"
+
+# Private subnets for EKS nodes and VPC endpoint ENIs (3 subnets across AZs recommended)
+# These should be private subnets with no direct internet gateway route
+# Example subnet CIDRs: 10.0.1.0/24, 10.0.2.0/24, 10.0.3.0/24
+private_subnet_ids = [
+  "subnet-0a1b2c3d4e5f6g7h8",  # us-east-1a
+  "subnet-1a2b3c4d5e6f7g8h9",  # us-east-1b
+  "subnet-2a3b4c5d6e7f8g9h0"   # us-east-1c
+]
+
+# Route table IDs for private subnets (for S3 gateway endpoint association)
+# One route table ID per private subnet (or shared route table ID if using one)
+private_vpc_rtbs = [
+  "rtb-0a1b2c3d4e5f6g7h8"
+]
+
+# Network ACL ID for the VPC (required for S3 prefix list rules)
+private_vpc_nacl_id = "acl-0a1b2c3d4e5f6g7h8"
+
+################################################################################
+# VPC Endpoints Configuration
+################################################################################
+
+# Create local VPC endpoints (true) or use centralized endpoints from peered VPC (false)
+# - true: Creates VPC interface/gateway endpoints in this VPC (easier but higher cost)
+# - false: Uses centralized endpoints from a shared services VPC (cost-effective for multi-account)
+create_vpc_endpoints = true
+
+# Route53 private hosted zone IDs (required when create_vpc_endpoints = false)
+# When using centralized endpoints, these zones are shared from the central VPC
+# When using local endpoints, these enable zone association if needed
+# Leave as placeholders if create_vpc_endpoints = true and not sharing zones
+peering_zone_ids = {
+  "autoscaling" = "Z01234567890ABCDEFGHI"
+  "ec2"         = "Z01234567890ABCDEFGHI"
+  "ecr-api"     = "Z01234567890ABCDEFGHI"
+  "ecr-dkr"     = "Z01234567890ABCDEFGHI"
+  "elasticache" = "Z01234567890ABCDEFGHI"
+  "elb"         = "Z01234567890ABCDEFGHI"
+  "logs"        = "Z01234567890ABCDEFGHI"
+  "sts"         = "Z01234567890ABCDEFGHI"
+  "rds"         = "Z01234567890ABCDEFGHI"
+  "rds-data"    = "Z01234567890ABCDEFGHI"
+}
+
+################################################################################
+# EKS API Access Configuration
+################################################################################
+
+# VPN endpoint CIDR for private API access (your VPN client IP range)
+# This CIDR is allowed to access the private EKS API endpoint
+# Example: Client VPN endpoint CIDR or Direct Connect/VPN gateway range
+vpn_endpoint_cidr = "10.200.0.0/22"
+
+# Optional: List of CIDR blocks from peered VPCs that need cluster API access
+# Can include: shared services VPCs, management VPCs, on-premises networks via VPN/Direct Connect
+# Add as many as needed - the configuration will dynamically create security group rules
+peered_vpc_cidrs = [
+  "10.20.0.0/16",  # Shared services VPC
+  "10.30.0.0/16",  # Management VPC
+  # "192.168.0.0/16"  # On-premises network (uncomment if needed)
+]
+
+# EKS creation phase - set to "true" ONLY during initial cluster creation
+# This temporarily enables public API endpoint access to bootstrap the cluster
+# Set back to "false" after initial creation to make the cluster fully private
+eks_creation_phase = "false"
+
+# Optional: Your public IP CIDR for temporary access during cluster creation
+# Only used when eks_creation_phase = "true"
+# eks_creation_public_access_ip = ["203.0.113.10/32"]  # Replace with your IP
+
+################################################################################
+# IAM Access Control
+################################################################################
+
+# Modern approach: List of IAM role/user ARNs to grant cluster admin access
+# Uses EKS Access Entry API (recommended for new clusters)
+# All ARNs in this list get AmazonEKSClusterAdminPolicy automatically
+cluster_admin_arns = [
+  # AWS SSO admin role (example format)
+  "arn:aws:iam::123456789012:role/aws-reserved/sso.amazonaws.com/AWSReservedSSO_AdministratorAccess_1a2b3c4d5e6f7g8h",
+  
+  # Team role
+  "arn:aws:iam::123456789012:role/DevOpsTeam",
+  
+  # Individual IAM user (if needed)
+  # "arn:aws:iam::123456789012:user/john.doe"
+]
+
+################################################################################
+# Legacy aws-auth ConfigMap (Optional - Use Access Entries Instead)
+################################################################################
+# These are only needed if you must support legacy authentication
+# For new clusters, use cluster_admin_arns above
+
+# Additional AWS account IDs to add to aws-auth configmap
+map_accounts = []
+
+# Additional IAM users to add to aws-auth configmap
+map_users = []
+
+# Additional IAM roles to add to aws-auth configmap
+map_roles = []
+
+# Example if you need legacy aws-auth:
+# map_roles = [
+#   {
+#     rolearn  = "arn:aws:iam::123456789012:role/LegacyRole"
+#     username = "legacy-admin"
+#     groups   = ["system:masters"]
+#   }
+# ]

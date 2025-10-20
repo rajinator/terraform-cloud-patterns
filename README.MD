@@ -17,6 +17,7 @@ The examples in this repository adhere to the following principles:
 | Example | Description |
 | :--- | :--- |
 | [**Centralized VPC Endpoints with Peering**](./vpc-endpoints-centralized-peering/) | Create centralized **VPC endpoints** in a **shared services VPC** and share them across multiple **spoke VPCs** in a **multi-account** architecture using **VPC peering** and **Route53 private hosted zones** for cost-effective, scalable **private** AWS service connectivity. |
+| [**Private EKS Cluster with VPC Endpoints**](./private-eks-clusters/) | Deploy a fully **private EKS cluster** with no internet gateway using **VPC interface endpoints** for AWS API access, **modern access entry API**, **IRSA** for pod-level permissions, and secure **VPN/bastion access** patterns. |
 | [**KEDA SQS Autoscaling with Pod-Level IRSA**](./keda-sqs-app-irsa/) | Demonstrates how to configure **pod-level IAM Roles for Service Accounts (IRSA)** for **Kubernetes application pods** that are autoscaled by **KEDA** based on **AWS SQS** queue depth, allowing granular IAM permissions per application. |
 | *... more examples to come ...* | |
 

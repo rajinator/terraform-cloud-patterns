@@ -1,0 +1,34 @@
+# Macos
+.DS_Store
+*.DS_Store
+
+## local testing
+*local
+
+# Terraform lock file
+*.terraform.lock.hcl
+
+# Terraform local development files
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+
+# Sensitive variable files
+# These often contain sensitive data and should not be committed.
+# Use a terraform.tfvars.example file for non-sensitive defaults.
+*.tfvars
+*.tfvars.json
+
+# Execution plan files
+# These can contain sensitive data.
+*.tfplan
+
+# Override files
+# These are used for local overrides and should not be committed.
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
